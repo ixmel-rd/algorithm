@@ -106,3 +106,29 @@ int stpint(int *n,int k){
   return r;
 }
 //--------------------------------------------------------------------
+//ローリングハッシュ
+long long a[2]={101,103};
+long long M[2]={1e9+7,1e9+9};
+long long d[2][300010],k[2][300010];
+void init(char *s){//!
+  int i,j;
+  for(i=0;i<2;i++){
+    k[i][0]=1;
+    for(j=d[i][0]=0;s[j];j++){
+      d[i][j+1]=(d[i][j]*a[i]+(s[j]-'a'+1))%M[i];
+      k[i][j+1]=(k[i][j]*a[i])%M[i];
+    }
+  }
+}
+int getlr(int l,int r,int i){return (M[i]*M[i]+d[i][r]-d[i][l]*k[i][r-l])%M[i];}
+void gets(char *s,int *h){
+  int i,j;
+  for(i=0;i<2;i++){
+    for(j=h[i]=0;s[j];j++)h[i]+=k[i][j]*(s[j]-'0');
+  }
+}
+int match(int l,int r,int *h){
+  int i,j=1;
+  for(i=0;i<2;i++)j*=getlr(l,r,i)-h[i]?1:0;
+  return j;
+}

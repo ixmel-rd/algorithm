@@ -20,6 +20,27 @@ int hout(){
   H[j/2]=k;
   return rt;
 }
+//複数のヒープを持つ!
+int R[2],C[2],H[2][200010],N[2][200010];
+//評価関数（いまはMAX）
+int hyouka(int a,int b,int i){
+  if(C[i]<b)return 1;
+  if(C[i]<a||b==0)return 0;
+  return N[i][H[i][a]]<N[i][H[i][b]]?1:0;
+}
+//挿入関数
+void hin(int a,int j){
+  int i=C[j]++;
+  for(N[j][H[j][0]=R[j]]=a;hyouka(0,i/2,j);i/=2)H[j][i]=H[j][i/2];
+  H[j][i]=R[j]++;
+}
+//取り出す関数
+int hout(int l){
+  int rt=H[l][1],i,j=2,k=H[l][--C[l]];
+  for(i=1;hyouka(i,C[l],l);i=j)H[l][i]=H[l][j=i*2+1-hyouka(i*2,i*2+1,l)];
+  H[l][j/2]=k;
+  return rt;
+}
 //ヒープをヒープの形で表示
 void prih(){
   int i,j=0;
@@ -31,6 +52,27 @@ void prih(){
     printf("%d ",N[H[i]]);
   }
   printf("\n");
+}
+//複数のヒープ
+int R[2],C[2],H[2][200010],N[2][200010];
+//評価関数（いまはMIN）
+int hyouka(int a,int b,int i){
+  if(C[i]<b)return 1;
+  if(C[i]<a||b==0)return 0;
+  return N[i][H[i][a]]<N[i][H[i][b]]?1:0;
+}
+//挿入関数
+void hin(int a,int j){
+  int i=C[j]++;
+  for(N[j][H[j][0]=R[j]]=a;hyouka(0,i/2,j);i/=2)H[j][i]=H[j][i/2];
+  H[j][i]=R[j]++;
+}
+//取り出す関数
+int hout(int l){
+  int rt=H[l][1],i,j=2,k=H[l][--C[l]];
+  for(i=1;hyouka(i,C[l],l);i=j)H[l][i]=H[l][j=i*2+1-hyouka(i*2,i*2+1,l)];
+  H[l][j/2]=k;
+  return rt;
 }
 //---------------------------------------------------------------
 //セグメントツリーを使うための関数たち!
