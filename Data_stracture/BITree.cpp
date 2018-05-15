@@ -8,15 +8,15 @@ class BIT{
 		n=size;
 		bit=vi(n+1);
 	}
-	int query(int i){//sum
-		int s=0;
+	Def query(int i){//sum
+		Def s=0;
 		while(i>0){
 			s+=bit[i];
 			i-=i&-i;
 		}
 		return s;
 	}
-	void add(int i,int x){
+	void add(int i,Def x){
 		while(i<=n){
 			bit[i]+=x;
 			i+=i&-i;

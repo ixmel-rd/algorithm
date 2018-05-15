@@ -89,24 +89,25 @@ struct Aho_Corasick : Trie{
 	}
 };
 int main(){
+	string s;
+	cin>>s;
 	int n;
 	cin>>n;
 	vs p(n);
 	rep(i,n)cin>>p[i];
-	string s;
-	cin>>s;
 	Aho_Corasick ac;
 	rep(i,n)ac.add(p[i]);
 	ac.build();
 	int now=ac.root;
-	vi dp(s.size()+1);
-	dp[0]=1;
+	vp dp;
 	rep(i,s.size()){
 		now=ac.next(now,s[i]);
-		for(int j:ac.nodes[now].accept)
-			if(dp[i+1-p[j].size()]>=0)(dp[i+1]+=dp[i+1-p[j].size()])%=1000000007;
+		for(int j:ac.nodes[now].accept){
+			dp.pb({i+1-p[j].size(),i+1});
+		}
+//			if(dp[i+1-p[j].size()]>=0)(dp[i+1]+=dp[i+1-p[j].size()])%=1000000007;
 	}
-	cout<<dp[s.size()]<<endl;
+	rep(i,dp.size())cout<<dp[i].first<<" "<<dp[i].second<<endl;
 }
 
 
