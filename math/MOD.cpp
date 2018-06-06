@@ -29,7 +29,7 @@ void init(){
 	loop(i,2,M)fact[i]=fact[i-1]*i%MOD;
 }
 // a^b mod MOD
-ll powmod(ll a,ll b,ll m){
+ll powmod(ll a,ll b,ll m=MOD){
 	ll out=1;
 	ll p=a%m;
 	while(b){
@@ -40,7 +40,7 @@ ll powmod(ll a,ll b,ll m){
 	return out;
 }
 //nCr
-ll nCr(ll n,ll r,ll m){
+ll nCr(ll n,ll r,ll m=MOD){
 	if(!h)init();
 	if(n<0||r<0||n<r)return 1;//??????
 	ll out=fact[n]*powmod(fact[r]*fact[n-r]%m,m-2,m)%m;
