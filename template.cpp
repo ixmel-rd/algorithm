@@ -24,6 +24,8 @@
 #define pb push_back
 #define all(in) in.begin(),in.end()
 #define shosu(x) fixed<<setprecision(x)
+#define show1d(v) rep(i,v.size())cout<<" "<<v[i];cout<<endl<<endl;
+#define show2d(v) rep(i,v.size()){rep(j,v[i].size())cout<<" "<<v[i][j];cout<<endl;}cout<<endl;
 using namespace std;
 //kaewasuretyuui
 typedef long long ll;

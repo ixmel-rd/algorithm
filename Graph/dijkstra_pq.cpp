@@ -8,9 +8,9 @@ class DIJ{
 	Def n,L;
 	vector<vector<Def> >d;//distance
 //	Def d[510][50][2];
-	DIJ(Def size,Def l=1){
+	DIJ(Def size,Def l){
 		n=size;
-		L=l;
+		L=l;//??????
 		G=vector<vector<edge> >(n);
 	}
 	void add_edge(Def a,Def b,Def c){
@@ -18,13 +18,13 @@ class DIJ{
 		G[a].pb(e);
 		G[b].pb(ee);
 	}
-	void dij(Def a,Def b,Def c,Def D){
+	void dij(Def s,Def g){
 		d=vector<vector<Def> >(n,vector<Def>(L+1,inf));
-		d[s][L]=0;//now oktime ->time
+		d[s][0]=0;
 //		rep(i,510)rep(j,50)rep(k,2)d[i][j][k]=INF;
 //		d[0][D][0]=0;
 		priority_queue<tp>q;
-		q.push(tp(0,s,0));//time now v_0 n-1を通ったか
+		q.push(tp(0,s,0));
 		while(!q.empty()){
 			Def cost,pos,t;
 			tie(cost,pos,t)=q.top();
@@ -34,18 +34,14 @@ class DIJ{
 			rep(i,G[pos].size()){
 				edge e=G[pos][i];
 				Def to=e.to;
-				Def ncost=cost+e.cost*v;
-				Def nv=(a*v+b)%c;
-				Def nt=t||(to==n-1);
-				if(ncost<d[to][nv][nt]){
-					d[to][nv][nt]=ncost;
-					q.push(tp(-ncost,to,nv,nt));
+				Def ncost=cost+;//??????
+				Def nt=t+;//??????
+				if(ncost<d[to][nt]){
+					d[to][nt]=ncost;
+					q.push(tp(-ncost,to,nt));
 				}
 			}
 		}
-		ll out=INF;
-		rep(i,50)out=min(out,d[0][i][1]);
-		cout<<out<<endl;
 	}
 };
 
