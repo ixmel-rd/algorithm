@@ -98,7 +98,3 @@ int main(){
 	rep(i,n)if(dij.d[i]!=inf)cout<<dij.d[i]<<endl;
 		else cout<<"INF"<<endl;
 }
-
-
-
-

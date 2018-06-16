@@ -50,9 +50,3 @@ string LCS(string &a,string &b){
 	}
 	return out;
 }
-
-
-
-
-
-

@@ -44,10 +44,3 @@ int main(){
 		if(m-1)cout<<out<<endl; //周囲の長さ
 	}
 }
-
-
-
-
-
-
-

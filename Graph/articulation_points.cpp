@@ -55,7 +55,3 @@ int main(){
 	}
 	art.art();
 }
-
-
-
-

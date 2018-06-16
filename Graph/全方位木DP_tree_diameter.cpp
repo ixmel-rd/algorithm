@@ -46,9 +46,3 @@ class TreeDP{//c++11
 		return dfs2(n/2,0,-1);
 	}
 };
-
-
-
-
-
-
