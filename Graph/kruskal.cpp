@@ -59,7 +59,3 @@ int main(){
 	}
 	cout<<krk.krk()<<endl;
 }
-
-
-
-

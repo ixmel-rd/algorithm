@@ -109,12 +109,3 @@ int main(){
 	}
 	rep(i,dp.size())cout<<dp[i].first<<" "<<dp[i].second<<endl;
 }
-
-
-
-
-
-
-
-
-

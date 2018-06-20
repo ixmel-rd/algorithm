@@ -67,7 +67,3 @@ int main(){
 	}
 	cout<<mcf.mcf(0,n-1,f)<<endl;;
 }
-
-
-
-

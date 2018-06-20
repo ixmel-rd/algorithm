@@ -27,7 +27,3 @@
 int main(){
 	heihou_bunnkatu();
 }
-
-
-
-

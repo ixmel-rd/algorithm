@@ -130,8 +130,3 @@ int main(){
 	}
 	cout<<mca.mca()<<endl;
 }
- 
-
-
- 
- 
