@@ -52,7 +52,7 @@ int main(){
 		scc.add_edge(a,b);
 	}
 	int N=scc.scc();
-	scc.make();
+	scc.make(N);
 }
 
 //MCA

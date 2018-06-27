@@ -1,37 +1,67 @@
-class BRI{
+﻿class BRI{
 	public:
-	int N;
-	vi used;
-	vvi G;
-	vp bridge;
+	int n,N;
+	vi order,inS,cmp;
+	vp brg;
+	vvi G,each_bcc;
+	// N : scc後の頂点数
+	// brg : 橋一覧
+	// each_bcc : 二重連結成分のリスト
+	// cmp : ある頂点がどの二重連結成分に含まれているか
+	stack<int> roots, S;
+	BRI(int size){
+		n=size;
+		G=vvi(n);
+	}
 	void add_edge(int s,int t){
 		G[s].pb(t);
 		G[t].pb(s);
 	}
-	BRI(int size){
-		N=size;
-		G=vvi(N);
-	}
-	int dfs(int i,int prev,int &n){
-		if(used[i])return used[i];
-		int m=n;
-		used[i]=n++;
-		rep(j,G[i].size()){
-			if(prev==G[i][j])continue;
-			if(used[i]<used[G[i][j]])continue;
-			int res=dfs(G[i][j],i,n);
-			m=min(m,res);
-			if(used[i]<res)bridge.pb(pii(min(i,G[i][j]),max(i,G[i][j])));
+	void visit(int cur,int prev,int &k){
+		order[cur]=++k;
+		S.push(cur);
+		inS[cur]=true;
+		roots.push(cur);
+		
+		rep(i,G[cur].size()){
+			int to=G[cur][i];
+			if(!order[to])visit(to,cur,k);
+			else if(to!=prev&&inS[to])
+				while(order[roots.top()]>order[to])roots.pop();
 		}
-		return m;
+		
+		if(cur==roots.top()){
+			if(prev!=-1)brg.pb({prev,cur});
+			vi bcc;
+			while(1){
+				int node=S.top();
+				S.pop();
+				inS[node]=false;
+				bcc.pb(node);
+				cmp[node]=N;
+				if(node==cur)break;
+			}
+			N++;
+			each_bcc.pb(bcc);
+			roots.pop();
+		}
 	}
 	void bri(){
-		used=vi(N);
-		bridge=vp(0);
-		int n=1;
-		dfs(0,-1,n);
-		sort(all(bridge));
-		rep(i,bridge.size())cout<<bridge[i].first<<" "<<bridge[i].second<<endl;
+		N=0;
+		order=inS=cmp=vi(n);
+		roots=S=stack<int>();
+		int k=0;
+		rep(i,n)if(order[i]==0)
+			visit(i,-1,k);
+	}
+	vvi make(){
+		vvi tG(N);
+		rep(i,brg.size()){
+			int a=brg[i].first,b=brg[i].second;
+			tG[cmp[a]].pb(cmp[b]);
+			tG[cmp[b]].pb(cmp[a]);
+		}
+		return tG;
 	}
 };
 int main(){
@@ -44,4 +74,9 @@ int main(){
 		bri.add_edge(a,b);
 	}
 	bri.bri();
+	vvi G=bri.make();
 }
+
+	
+
+
