@@ -1,7 +1,7 @@
 class SCC{//cmp(0 - kk-1) is scc's return. Same number is group. The number is no relatoin.
 	public:
-	int n;
-	vvi G,rG,tG;
+	int n,N;
+	vvi G,rG;
 	vector<bool>used;
 	vi vs,cmp;
 	SCC(int size){
@@ -29,17 +29,17 @@ class SCC{//cmp(0 - kk-1) is scc's return. Same number is group. The number is n
 		rep(i,n)used[i]=false;
 		rep(v,n)if(!used[v])dfs(v);
 		rep(i,n)used[i]=false;
-		int kk=0;
-		for(int i=vs.size()-1;i>=0;i--)if(!used[vs[i]])rdfs(vs[i],kk++);
-		return kk;  
+		N=0;
+		for(int i=vs.size()-1;i>=0;i--)if(!used[vs[i]])rdfs(vs[i],N++);
+		return N;
 	}
-	void make(int size){
-		int N=size;
-		tG=vvi(N);
+	vvi make(){
+		vvi tG(N);
 		rep(i,n)rep(j,G[i].size())if(cmp[i]!=cmp[G[i][j]]){
 			tG[cmp[i]].pb(cmp[G[i][j]]);
 //			tG[cmp[G[i][j]]].pb(cmp[i]);
 		}
+		return tG;
 	}
 };
 int main(){
@@ -52,7 +52,7 @@ int main(){
 		scc.add_edge(a,b);
 	}
 	int N=scc.scc();
-	scc.make(N);
+	vvi G=scc.make();
 }
 
 //MCA
