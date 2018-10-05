@@ -54,7 +54,7 @@ int Simplex(int h,int w,int *ans){
     }
     if(mj==-1)return 0;
     for(i=0;i<h;i++){
-      if(M[i][w]/M[i][mj]+eps<0)continue;
+      if(M[i][mj]<eps)continue;
       if(mi==-1||M[i][w]/M[i][mj]<M[mi][w]/M[mi][mj])mi=i;
     }
     if(mi==-1)return 2;
@@ -72,7 +72,7 @@ int Simplex(int h,int w,int *ans){
 //MAX z=c^tx  Ax op(<= 0,= 1,>= 2) b
 //h式の数　w変数の数
 //return 0 正常終了 1:解ナシ 2:バグ
-//d[h][w+h]が答え
+//M[h][w+h]が答え
 //x_ans[i]==d[i][w+h]　other x==0
 int senkei(int h,int w,double A[10][30],double *b,double *c,int *op,int *ans){
   double t;
@@ -95,9 +95,5 @@ int senkei(int h,int w,double A[10][30],double *b,double *c,int *op,int *ans){
   for(i=0;i<=h;i++)M[i][h+w]=M[i][w+h+h];
   for(j=0;j< w;j++)M[h][j]=-b[j];
   for(j=0;j<=h;j++)M[h][w+j]=0;
-  for(i=0;i<h;i++){
-    t=M[h][ans[i]];
-    for(j=0;j<=h+w;j++)M[h][j]-=M[i][j]*t;
-  }
   return Simplex(h,h+w,ans);
 }
