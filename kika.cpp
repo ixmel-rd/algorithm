@@ -301,6 +301,57 @@ C CIN(){
 bool para(L a,L b){
 	return (abs(cross(a[1]-a[0],b[1]-b[0]))<EPS);
 }
+//XY座標
+#define X real()
+#define Y imag()
+class Triangle{
+
+	private:
+	//三角形の３点の座標
+	P a, b, c;
+	//三角形の３辺の長さ
+	double edgeA,edgeB,edgeC;
+	//三角形の３角の大きさ(ラジアン)
+	double angleA,angleB,angleC;
+	//余弦定理から３つの角度を求める関数
+	double LawOfCosines(double a,double b, double c){
+		return acos( (b*b+c*c-a*a) / (2.0*b*c) );
+	}
+	//２つのdouble型の数値が等しいかどうか
+	bool equal(double a, double b){
+		return (abs( a-b ) < EPS)? true : false ;
+	}
+
+	public:
+	//コンストラクタ(３つの点と辺と角度を初期化)
+	Triangle(P p1, P p2, P p3){
+		a = p1;
+		b = p2;
+		c = p3;
+		edgeB = abs(c-a);
+		edgeA = abs(b-c);
+		edgeC = abs(a-b);
+		angleA = LawOfCosines(edgeA,edgeB,edgeC);
+		angleB = LawOfCosines(edgeB,edgeC,edgeA);
+		angleC = LawOfCosines(edgeC,edgeA,edgeB);
+	}
+	
+	double circumscribedCircleRadius(){//外接円の半径を返す
+		return ( edgeA / sin(angleA) / 2.0 );
+	}
+	double circumscribedCircleX(){//外心(外接円の中心)のX座標を返す
+		double A = sin(2.0*angleA);
+		double B = sin(2.0*angleB);
+		double C = sin(2.0*angleC);
+		return ( (a.X * A + b.X * B + c.X * C) / (A+B+C) );
+	}
+	double circumscribedCircleY(){//外心(外接円の中心)のY座標を返す
+		double A = sin(2.0*angleA);
+		double B = sin(2.0*angleB);
+		double C = sin(2.0*angleC);
+		return ( (a.Y * A + b.Y * B + c.Y * C) / (A+B+C) );
+	}
+};
 double min(double a,double b){return a<b?a:b;}
 double max(double a,double b){return a>b?a:b;}
 int main(){
