@@ -49,21 +49,21 @@ class DIJ{
 class DIJ{
 	public:
 	struct edge{
-		int to,cost;
+		Def to,cost;
 	};
 	vector<vector<edge> >G;
-	int n;
+	Def n;
 	vi d;//distance
-	DIJ(int size){
+	DIJ(Def size){
 		n=size;
 		G=vector<vector<edge> >(n);
 	}
-	void add_edge(int a,int b,int c){
+	void add_edge(Def a,Def b,Def c){
 		edge e={b,c},ee={a,c};
 		G[a].pb(e);
 		G[b].pb(ee);
 	}
-	void dij(int s){
+	void dij(Def s){
 		d=vi(n,inf);
 		d[s]=0;
 		priority_queue<pii>q;
@@ -71,12 +71,12 @@ class DIJ{
 		while(!q.empty()){
 			pii p=q.top();
 			q.pop();
-			int pos=p.second,cost=-p.first;
+			Def pos=p.second,cost=-p.first;
 			if(cost>d[pos])continue;
 			rep(i,G[pos].size()){
 				edge e=G[pos][i];
-				int to=e.to;
-				int nowcost=cost+e.cost;
+				Def to=e.to;
+				Def nowcost=cost+e.cost;
 				if(nowcost<d[to]){
 					d[to]=nowcost;
 					q.push(pii(-d[to],to));
@@ -85,16 +85,3 @@ class DIJ{
 		}
 	}
 };
-int main(){
-	int n,m,s;
-	cin>>n>>m>>s;
-	DIJ dij(n);
-	while(m--){
-		int a,b,c;
-		cin>>a>>b>>c;
-		dij.add_edge(a,b,c);
-	}
-	dij.dij(s);
-	rep(i,n)if(dij.d[i]!=inf)cout<<dij.d[i]<<endl;
-		else cout<<"INF"<<endl;
-}
