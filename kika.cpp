@@ -301,7 +301,31 @@ C CIN(){
 bool para(L a,L b){
 	return (abs(cross(a[1]-a[0],b[1]-b[0]))<EPS);
 }
-double min(double a,double b){return a<b?a:b;}
-double max(double a,double b){return a>b?a:b;}
+//余弦定理
+double LawOfCosines(double a,double b,double c){
+	return acos((b*b+c*c-a*a)/(2.*b*c));
+}
+//外接円
+pair<P,double> circumccircle(P a,P b,P c){
+	double dA=abs(b-c),dB=abs(a-c),dC=abs(a-b);
+	double angA=LawOfCosines(dA,dB,dC);
+	double angB=LawOfCosines(dB,dC,dA);
+	double angC=LawOfCosines(dC,dA,dB);
+	double A=sin(2.*angA),B=sin(2.*angB),C=sin(2.*angC);
+	double x=(a.real()*A+b.real()*B+c.real()*C)/(A+B+C);
+	double y=(a.imag()*A+b.imag()*B+c.imag()*C)/(A+B+C);
+	P p(x,y);
+	double r=dA/sin(angA)/2.;
+	return {p,r};
+}
+//内接円
+pair<P,double> incircle(P a,P b,P c){
+	double dA=abs(b-c),dB=abs(a-c),dC=abs(a-b);
+	L l1(a,b+dC/(dB+dC)*(c-b));
+	L l2(b,a+dC/(dA+dC)*(c-a));
+	P p=crosspointLL(l1,l2);
+	double r=abs(p-projection(L(a,b),p));
+	return {p,r};
+}
 int main(){
 }

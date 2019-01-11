@@ -40,3 +40,60 @@ int lis(int n,int *d){
   for(i=1;i<n;i++)s[r]<d[i]?(s[++r]=d[i]):(s[lub(0,r,d[i],s)]=d[i]);
   return r+1;
 }
+//線形計画法を解く関数たち
+double M[10][30]={};
+//本体　シンプレックス法
+int Simplex(int h,int w,int *ans){
+  int i,j,mi,mj,k=w;
+  double t,eps=1e-9;
+  while(k--){
+    mi=mj=-1;
+    for(j=0;j<w;j++){
+      if(M[h][j]+eps>0)continue;
+      if(mj==-1||M[h][j]<M[h][mj])mj=j;
+    }
+    if(mj==-1)return 0;
+    for(i=0;i<h;i++){
+      if(M[i][mj]<eps)continue;
+      if(mi==-1||M[i][w]/M[i][mj]<M[mi][w]/M[mi][mj])mi=i;
+    }
+    if(mi==-1)return 2;
+    t=M[mi][mj];
+    for(j=0;j<=w;j++)M[mi][j]/=t;
+    for(i=0;i<=h;i++){
+      t=i==mi?0:M[i][mj];
+      for(j=0;j<=w;j++)M[i][j]-=M[mi][j]*t;
+    }
+    ans[mi]=mj;
+  }
+  return 1;
+}
+//呼ぶ方
+//MAX z=c^tx  Ax op(<= 0,= 1,>= 2) b
+//h式の数　w変数の数
+//return 0 正常終了 1:解ナシ 2:バグ
+//M[h][w+h]が答え
+//x_ans[i]==d[i][w+h]　other x==0
+int senkei(int h,int w,double A[10][30],double *b,double *c,int *op,int *ans){
+  double t;
+  int i,j;
+  for(i=0;i<h;i++){
+    for(j=0;j<w;j++)M[i][j]=A[i][j];
+    if(op[i]==0)M[i][w+i]=M[h][w+i]=1;
+    if(op[i]==2){
+      M[i][w+i]=-1;
+      M[i][w+h+i]=M[h][w+h+i]=1;
+    }
+    M[i][w+h+h]=c[i];
+    ans[i]=w+h*(op[i]/2)+i;
+  }
+  for(i=0;i<h;i++){
+    t=ans[i]<h+w?0:M[h][ans[i]];
+    for(j=0;j<=w+h+h;j++)M[h][j]-=M[i][j]*t;
+  }
+  if(i=Simplex(h,w+h+h,ans))return i;
+  for(i=0;i<=h;i++)M[i][h+w]=M[i][w+h+h];
+  for(j=0;j< w;j++)M[h][j]=-b[j];
+  for(j=0;j<=h;j++)M[h][w+j]=0;
+  return Simplex(h,h+w,ans);
+}
