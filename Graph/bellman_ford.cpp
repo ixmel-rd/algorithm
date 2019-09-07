@@ -18,16 +18,20 @@ class BEL{
 	int bel(Def s){// return 1 -> negative cycle
 		d=vector<Def>(n,inf);
 		d[s]=0;
-		rep(i,n+1){
+ 
+		vector<Def>used(n);
+		rep(i,2*n){
 			rep(j,n)rep(k,G[j].size()){
 				edge e=G[j][k];
 				if(d[j]!=inf&&d[e.to]>d[j]+e.cost){
-					if(i==n)return 1;
 					d[e.to]=d[j]+e.cost;
+					if(i>=n)used[e.to]=true;
 				}
+				if(used[j])used[e.to]=true;
 			}
 		}
-		return 0;
+		if(used[n-1])d[n-1]=inf;
+		return d[n-1];
 	}
 };
 int main(){
@@ -40,7 +44,7 @@ int main(){
 		bel.add_edge(a,b,c);
 	}
 	int a=bel.bel(r);
-	if(a)cout<<"NEGATIVE CYCLE"<<endl;
+	if(a==inf)cout<<"NEGATIVE CYCLE"<<endl;
 	else rep(i,n)if(bel.d[i]>inf/2)cout<<"INF"<<endl;
 	else cout<<bel.d[i]<<endl;
 }
