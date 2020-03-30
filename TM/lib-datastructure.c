@@ -1,11 +1,11 @@
 #include<stdio.h>
 //添字ヒープを使うための関数達!
 int R=1,C=1,H[2000010],N[2000010];
-//評価関数（いまはMAX）
+//評価関数（いまはMIN）
 int hyouka(int a,int b){
   if(C<b)return 1;
   if(C<a||b==0)return 0;
-  return N[H[a]]>N[H[b]]?1:0;
+  return N[H[a]]<N[H[b]]?1:0;
 }
 //挿入関数
 void hin(int a){
@@ -20,27 +20,6 @@ int hout(){
   H[j/2]=k;
   return rt;
 }
-//複数のヒープを持つ!
-int R[2],C[2],H[2][200010],N[2][200010];
-//評価関数（いまはMAX）
-int hyouka(int a,int b,int i){
-  if(C[i]<b)return 1;
-  if(C[i]<a||b==0)return 0;
-  return N[i][H[i][a]]<N[i][H[i][b]]?1:0;
-}
-//挿入関数
-void hin(int a,int j){
-  int i=C[j]++;
-  for(N[j][H[j][0]=R[j]]=a;hyouka(0,i/2,j);i/=2)H[j][i]=H[j][i/2];
-  H[j][i]=R[j]++;
-}
-//取り出す関数
-int hout(int l){
-  int rt=H[l][1],i,j=2,k=H[l][--C[l]];
-  for(i=1;hyouka(i,C[l],l);i=j)H[l][i]=H[l][j=i*2+1-hyouka(i*2,i*2+1,l)];
-  H[l][j/2]=k;
-  return rt;
-}
 //ヒープをヒープの形で表示
 void prih(){
   int i,j=0;
@@ -53,26 +32,38 @@ void prih(){
   }
   printf("\n");
 }
-//複数のヒープ
-int R[2],C[2],H[2][200010],N[2][200010];
+//添字ヒープを使うための関数達!
+int R[10]=1,C[10]=1,H[10][200010],N[10][200010];
 //評価関数（いまはMIN）
-int hyouka(int a,int b,int i){
-  if(C[i]<b)return 1;
-  if(C[i]<a||b==0)return 0;
-  return N[i][H[i][a]]<N[i][H[i][b]]?1:0;
+int hyouka(int a,int b,int n){
+  if(C[n]<b)return 1;
+  if(C[n]<a||b==0)return 0;
+  if(n==0)return N[n][H[n][a]]<N[n][H[n][b]]?1:0;
 }
 //挿入関数
-void hin(int a,int j){
-  int i=C[j]++;
-  for(N[j][H[j][0]=R[j]]=a;hyouka(0,i/2,j);i/=2)H[j][i]=H[j][i/2];
-  H[j][i]=R[j]++;
+void hin(int a,int i,int n){
+  int i=C[i]++;
+  for(N[n][H[n][0]=R[n]]=a;hyouka(0,i/2);i/=2)H[n][i]=H[n][i/2];
+  H[n][i]=R++;
 }
 //取り出す関数
-int hout(int l){
-  int rt=H[l][1],i,j=2,k=H[l][--C[l]];
-  for(i=1;hyouka(i,C[l],l);i=j)H[l][i]=H[l][j=i*2+1-hyouka(i*2,i*2+1,l)];
-  H[l][j/2]=k;
+int hout(int n){
+  int rt=H[n][1],i,j=2,k=H[n][--C];
+  for(i=1;hyouka(i,C[n],n);i=j)H[n][i]=H[n][j=i*2+1-hyouka(i*2,i*2+1,n)];
+  H[n][j/2]=k;
   return rt;
+}
+//ヒープをヒープの形で表示
+void prih(int n){
+  int i,j=0;
+  for(i=0;i<C[n];i++){
+    if(i==1<<j){
+      printf("\n");
+      j++;
+    }
+    printf("%d ",N[n][H[n][i]]);
+  }
+  printf("\n");
 }
 //---------------------------------------------------------------
 //セグメントツリーを使うための関数たち!
@@ -120,6 +111,42 @@ int sout(int a,int b,int i,int l,int r){//printf("%d %d %d %d %d\n",a,b,i,l,r);
   if(r<=a||b<=l)return -1;
   if(a<=l&&r<=b)return S[i];
   return hyoka(sout(a,b,i*2,l,(l+r)/2),sout(a,b,i*2+1,(l+r)/2,r));
+}
+long long N[400010],L[400010],T;
+long long  hyouka(long long a,long long b){return a+b;}
+void lsset(int n,int *d){
+  int i;
+  for(T=1;T<n;T*=2);
+  for(i=0;i<T;i++)N[T+i]=i<n?d[i]:0;
+  for(i=T-1;i;i--)N[i]=hyouka(N[i*2],N[i*2+1]);
+}
+void lasy(int i,int l,int r){
+  if(L[i]==0)return;
+  N[i]+=L[i]*(r-l);
+  if(r-l>1){
+    L[i*2  ]+=L[i];
+    L[i*2+1]+=L[i];
+  }
+  L[i]=0;
+}
+void lsadd(int a,int b,int c,int i,int l,int r){//printf("%d %d %d\n",i,l,r);
+  lasy(i,l,r);
+  if(r<=a||b<=l)return;
+  if(a<=l&&r<=b){
+    L[i]+=c;
+    lasy(i,l,r);
+  }
+  else{
+    lsadd(a,b,c,i*2  ,l,(l+r)/2);
+    lsadd(a,b,c,i*2+1,(l+r)/2,r);
+    N[i]=hyouka(N[i*2],N[i*2+1]);
+  }
+}
+long long lsget(int a,int b,int i,int l,int r){
+  lasy(i,l,r);
+  if(b<=l||r<=a)return 0;
+  if(a<=l&&r<=b)return N[i];
+  return hyouka(lsget(a,b,i*2,l,(l+r)/2),lsget(a,b,i*2+1,(l+r)/2,r));
 }
 
 //--------------------------------------------------------------------
@@ -170,6 +197,26 @@ void Union(int a,int b){
     for(++b;p[b];b=p[b]);
     d[a]<d[b]?(p[a]=b):(p[b]=a);
     if(d[a]==d[b])d[a]++;
+  }
+}
+int p[100010]={0};
+int d[100010]={0};
+int S[100010];//サイズ用配列 未実験
+for(i=0;i<100010;i++)S[i]=1;
+int Find(int a,int b){
+  for(r=++a;p[r];r=p[r]);
+  for(;n=p[a];a=n)p[a]=r;
+  for(r=++b;p[r];r=p[r]);
+  for(;n=p[b];b=n)p[b]=r;
+  return a-b?1:0;
+}
+void Union(int a,int b){
+  if(Find(a,b)){
+    for(++a;p[a];a=p[a]);
+    for(++b;p[b];b=p[b]);
+    d[a]<d[b]?(p[a]=b):(p[b]=a);
+    if(d[a]==d[b])d[a]++;
+    S[a]=S[b]=S[a]+S[b];
   }
 }
 //-----------------------------------------------------------------
@@ -274,4 +321,32 @@ void prim(int n){
   for(i=0;i<H[n];i++)printf("     ");
   printf("%d\n",N[n]);
   if(P[2][n])prim(P[2][n]);
+}
+//-------------------------------------------------------------
+//Trie木
+//普通のグラフで扱うならto coを作ること
+//to[i]=i+1;
+//この初期化をmainでやっとく
+for(i=0;i<100010;i++)ta[i]=-1;
+int ta[100010],nt[100010],CA[100010],U[100010],R=0;
+//追加する関数
+void tadd(char *s){
+  int n=0,i,j;
+  for(i=-1;s[++i];n=j<0?R:j+1){
+    for(j=ta[n];j+1&&CA[j]-s[i];j=nt[j]);
+    if(j<0){
+      nt[R]=ta[n];
+      CA[ta[n]=R++]=s[i];
+    }
+  }
+  U[n]=1;
+}
+//探す関数　0:ナイ1:アリ
+int tck(char *s){
+  int n=0,i,j;
+  for(i=-1;s[++i];n=j+1){
+    for(j=ta[n];j+1&&CA[j]-s[i];j=nt[j]);
+    if(j<0)return 0;
+  }
+  return U[n];
 }
