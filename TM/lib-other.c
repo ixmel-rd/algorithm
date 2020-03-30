@@ -97,3 +97,118 @@ int senkei(int h,int w,double A[10][30],double *b,double *c,int *op,int *ans){
   for(j=0;j<=h;j++)M[h][w+j]=0;
   return Simplex(h,h+w,ans);
 }
+//-----------------------------------------------------------------------
+//全方位木DPの関数たち
+int ta[200010],nt[400010],to[400010],c[400010],ANS[200020],ans[200020];
+//普通に木DPする関数(ABC160のまま)
+void tDP(int s){//printf("!%d\n",s);
+  long long i;
+  u[s]=1;
+  for(i=ta[s];i+1;i=nt[i]){
+    if(u[to[i]])continue;
+    f(to[i]);
+    ans[s]=ans[s]*ans[to[i]]%M;
+    cc[s]+=cc[to[i]];
+  }
+  ans[s]=ans[s]*inv(cc[s],M)%M;
+}
+//ansに根がsの時の答えが入ってる
+//ccに部分木野大きさが入ってる
+//根ががsからtに変わる時の処理(ABC160Fのまま)
+void rot(int s,int t){
+  ans[s]=ans[s]*cc[s]%M*inv(ans[t],M)%M;
+  ans[t]=ans[t]*cc[t]%M;
+  cc[s]-=cc[t];
+  cc[t]+=cc[s];
+  ans[s]=ans[s]*ip[s]%M;
+  ans[t]=ans[t]*ip[t]%M*ans[s]%M;
+}
+//全方位やる
+void atdp(int s){
+  int i;
+  u[s]=2;
+  ANS[s]=ans[s];
+  for(i=ta[s];i+1;i=nt[i]){
+    if(u[to[i]]==2)continue;
+    atrot(s,to[i]);
+    atDP(to[i]);
+    atrot(to[i],s);
+  }
+}
+//呼び出す方
+void atDP(int v,int *fr,int *to){
+  int i,I=1;
+  for(i=0;i<v;i++)ta[i+I]=-1;
+  for(i=0;i<v;i++)cc[i+I]=1;
+  for(i=0;i<v-1;i++){
+    nt[i]=ta[to[i+v-1]=a[i]];
+    nt[i+v-1]=ta[to[i]=b[i]];
+    ta[a[i]]=i;
+    ta[b[i]]=i+n-1;
+  }
+  tDP(I);
+  atdp(I);
+}
+//----------------------------------------------------
+//全方位木DPの関数
+//tSに部分木の大きさ、ANSに全方位木dpの答え、tansに木DPの答えが入る
+int ta[200010],nt[400010],to[400010],tS[400010];
+long long tu[200010],ANS[200020],tans[200020];
+//sが親でtから帰ってきた時の処理 変えるやつ
+void fc(int s,int t){tans[s]=tans[s]*tans[t]       %M;}
+//fcの逆処理　変えるやつ
+void ic(int s,int t){tans[s]=tans[s]*inv(tans[t],M)%M;}
+//すべての子の処理が終わった時の処理　変えるやつ
+void fp(int s){tans[s]=tans[s]*inv(tS[s],M)%M;}
+//fpの逆処理　変えるやつ
+void ip(int s){tans[s]=tans[s]*tS[s]       %M;}
+//木DPの関数
+void tDP(int s){//printf("!%d\n",s);
+  long long i;
+  tu[s]=1;
+  for(i=ta[s];i+1;i=nt[i]){
+    if(tu[to[i]])continue;
+    tDP(to[i]);
+    fc(s,to[i]);
+    tS[s]+=tS[to[i]];
+  }
+  fp(s);
+}
+//根をsからtにする奴
+void chrt(int s,int t){
+  ip(s);
+  ic(s,t);
+  ip(t);
+  tS[s]-=tS[t];
+  tS[t]+=tS[s];
+  fp(s);
+  fc(t,s);
+  fp(t);
+}
+//全方位やる奴
+void atdp(int s){//printf("!!%d %d\n",s,cc[s]);
+  int i;
+  tu[s]=2;
+  ANS[s]=tans[s];
+  for(i=ta[s];i+1;i=nt[i]){
+    if(tu[to[i]]==2)continue;
+    chrt(s,to[i]);
+    atdp(to[i]);
+    chrt(to[i],s);
+  }
+}
+//呼びだす奴
+void atDP(int v,int *fr,int *to){
+  int i,I=1;
+  for(i=0;i<v;i++)ta[i+I]=-1;
+  for(i=0;i<v;i++)tS[i+I]=1;
+  for(i=0;i<v;i++)tans[i+I]=1;
+  for(i=0;i<v-1;i++){
+    nt[i]=ta[to[i+v-1]=a[i]];
+    nt[i+v-1]=ta[to[i]=b[i]];
+    ta[a[i]]=i;
+    ta[b[i]]=i+v-1;
+  }
+  tDP(I);
+  atdp(I);
+}
