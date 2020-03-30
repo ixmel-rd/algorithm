@@ -34,6 +34,16 @@ int lub(int l,int r,int n,int *d){
   if(l==r)return m;
   return n<=d[m]?lub(l,m,n,d):lub(m+1,r,n,d);
 }
+int ub(int l,int r,int n,int *d){
+  int m=(l+r)/2;
+  if(l==r)return m;
+  return n<d[m]?ub(l,m,n,d):ub(m+1,r,n,d);
+}
+int lb(int l,int r,int n,int *d){
+  int m=(l+r)/2;
+  if(l==r)return m;
+  return n<=d[m]?lb(l,m,n,d):lb(m+1,r,n,d);
+}
 //長さn数列dの最長増加部分文字列のながさを返す!
 int lis(int n,int *d){
   int r=0,i,s[10000]={d[0]};
