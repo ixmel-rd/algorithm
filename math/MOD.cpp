@@ -1,5 +1,5 @@
-﻿//行列累乗
-#define MOD 1000000007
+//行列累乗
+const int MOD=1000000007;
 vvi mul(vvi A,vvi B){
 	vvi C(A.size(),vi(B[0].size()));
 	rep(i,A.size())rep(k,B.size())rep(j,B[0].size())
@@ -21,34 +21,21 @@ vvi pow(vvi A,ll n){
 ll nCr(int n,int r){
 	return (r==0|| n==r) ? 1 : nCr(n-1,r) + nCr(n-1,r-1);
 }
-
-
 //--------------------------------
-#define MOD 1000000007
-#define MAX 1000010
-int sosu[MAX]={1,1,0};
-vi sos;
-bool h=false;
-void init(){
-	h=true;
-	for(int i=2;i*i<=MAX;i++)if(!sosu[i])
-	for(int j=i*2;j<MAX;j+=i)sosu[j]=true;
-	rep(i,MAX)if(sosu[i]==0)sos.pb(i);
-}
 //nCr mod m
 //n<1e7 r,m：任意
 //前計算O(nloglogn) 本計算O(n/logn)
+// need prinme
 ll nCr(ll n,ll r,ll m){
-	if(!h)init();
 	if(n<0||r<0||r>n)return 0;
 	if(r>n/2)r=n-r;
 	vi A(n);
 	rep(i,r)A[i]=n-i;
-	rep(p,sos.size()){
-		if(sos[p]>r)break;
-		for(ll q=sos[p];q<=r;q*=sos[p]){
+	rep(p,sosu.size()){
+		if(sosu[p]>r)break;
+		for(ll q=sosu[p];q<=r;q*=sosu[p]){
 			int m=n%q;
-			for(int i=m,j=0;j<r/q;i+=q,j++)A[i]/=sos[p];
+			for(int i=m,j=0;j<r/q;i+=q,j++)A[i]/=sosu[p];
 		}
 	}
 	ll out=1;
@@ -71,18 +58,7 @@ ll nCr_l(ll n,ll r,ll m){
 }
 
 //--------------------------------
-//http://codeforces.com/gym/100633/problem/J
-// extgcd(a=12707,b=12319,x,y) -> x=32,y=-33,return 97=gcd
-ll extgcd(ll a,ll b,ll &x,ll &y){//ax+by=gcd(a,b)=d
-	ll d=a;
-	if(b!=0){
-		d=extgcd(b,a%b,y,x);
-		y-=(a/b)*x;
-	}else{
-		x=1;y=0;
-	}
-	return d;
-}
+// 中国剰余定理
 // x= mod1 mod div1
 // x= mod2 mod div2
 // であるxを返す
@@ -96,8 +72,7 @@ ll crt(ll div1,ll mod1,ll div2,ll mod2){
 	return nmod;
 }
 
-#define MOD 1000000007
-#define M 1000000
+const int M=100000;
 //Lucasの定理の拡張
 //m=p^q m<1e7 n,r:任意 p:素数 p!=1
 vi fact,ifact;
@@ -144,29 +119,21 @@ ll nCr(ll n,ll r,ll p,ll q){
 	if(!(p==2&&q>=3)&&em&1)out=(P-out)%P;
 	return out;
 }
-int sosu[M]={1,1,0};
-vi sos;
-bool h=false;
-void init(){
-	h=true;
-	for(int i=2;i*i<=M;i++)if(!sosu[i])
-	for(int j=i*2;j<M;j+=i)sosu[j]=true;
-	rep(i,M)if(sosu[i]==0)sos.pb(i);
-}
-//
+
+//need prime
 //n,r:任意 m<1e7
 ll nCr(ll n,ll r,ll m){
 	if(!h)init();
 	ll div=1,mod=0;
-	rep(i,sos.size()){
+	rep(i,sosu.size()){
 		int co=0,s=1;
-		while(m%sos[i]==0){
+		while(m%sosu[i]==0){
 			co++;
-			m/=sos[i];
-			s*=sos[i];
+			m/=sosu[i];
+			s*=sosu[i];
 		}
 		if(co){
-			mod=crt(s,nCr(n,r,sos[i],co),div,mod);
+			mod=crt(s,nCr(n,r,sosu[i],co),div,mod);
 			div*=s;
 		}
 	}
