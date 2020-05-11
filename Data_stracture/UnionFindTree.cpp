@@ -1,14 +1,14 @@
 struct UnionFind{
     vector<int> data;
     UnionFind(int size) : data(size, -1) {}
-    bool unionSet(int x,int y){
+    bool unite(int x,int y){
         x=root(x);y=root(y);
         if(x==y)return 0;
         if(data[y]<data[x])swap(x,y);
         data[x]+=data[y],data[y]=x;
         return 1;
     }
-    bool findSet(int x,int y){
+    bool find(int x,int y){
         return root(x)==root(y);
     }
     int root(int x){
