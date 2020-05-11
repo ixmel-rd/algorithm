@@ -18,7 +18,7 @@ int extgcd(int a,int b,int &x,int &y){//ax+by=1
 const int M=100000;
 int sos[M]={1,1};//0->prime  1->not prime
 vi sosu;
-void init(){
+void prime(){
 	for(int i=2;i*i<=M;i++)if(sos[i]==0)
 	for(int j=i*2;j<M;j+=i)sos[j]=1;
 	rep(i,M)if(sos[i]==0)sosu.pb(i);
