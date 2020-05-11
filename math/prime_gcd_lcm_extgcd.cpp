@@ -4,6 +4,8 @@ ll gcd(ll a,ll b){
 ll lcm(ll a,ll b){
 	return a/gcd(a,b)*b;
 }
+//http://codeforces.com/gym/100633/problem/J
+// extgcd(a=12707,b=12319,x,y) -> x=32,y=-33,return 97=gcd
 int extgcd(int a,int b,int &x,int &y){//ax+by=1
 	int d=a;
 	if(b!=0){
