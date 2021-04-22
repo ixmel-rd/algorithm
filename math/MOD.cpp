@@ -59,17 +59,18 @@ ll nCr_l(ll n,ll r,ll m){
 
 //--------------------------------
 // 中国剰余定理
-// x= mod1 mod div1
-// x= mod2 mod div2
+// x % d1 = m1
+// x % d2 = m2
 // であるxを返す
-ll crt(ll div1,ll mod1,ll div2,ll mod2){
-	ll x,y;
-	ll d=extgcd(div1,div2,x,y);
-	if(d-1)assert(0);
-	ll ndiv=div1*div2;
-//	ll nmod=(x*(mod2-mod1)*div1+mod1)%ndiv;
-	ll nmod=(mod1*div2%ndiv*(ndiv+y)%ndiv+mod2*div1%ndiv*(ndiv+x)%ndiv)%ndiv;
-	return nmod;
+ll crt(ll d1,ll m1,ll d2, ll m2){
+	ll p,q;
+	ll d=extgcd(d1,d2,p,q);
+	if((m2-m1)%d!=0)return -1;
+	ll m=d1*(d2/d);
+	ll tmp=(m2-m1)/d*p%(d2/d);
+	tmp=m1+d1*tmp;
+	ll r=(tmp%m+m)%m;
+	return r;
 }
 
 const int M=100000;
