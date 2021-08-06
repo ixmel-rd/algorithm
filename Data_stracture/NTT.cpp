@@ -1,3 +1,4 @@
+//参考：https://kazuma8128.hatenablog.com/entry/2018/05/31/144519
 #define MOD 924844033
 #define R 5
 ll powmod(ll a,ll b,ll m=MOD){
