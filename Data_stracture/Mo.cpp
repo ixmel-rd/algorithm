@@ -68,7 +68,10 @@ signed main(){
 	}
 	mo.build();
 	vi out(m);
-	rep(i,m)out[mo.next()]=sum;
+	rep(i,m){
+		int idx=mo.next();
+		out[idx]=sum;
+	}
 	rep(i,m)printf("%lld\n",out[i]);
 }
 
