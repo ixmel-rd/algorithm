@@ -41,3 +41,10 @@ ll nHr(ll n, ll r) {
         return 1;
     return nCr(n + r - 1, r - 1);
 }
+mint nHr(ll n, ll r) {
+    if (!r && n != r)
+        return 0;
+    if (!r)
+        return 1;
+    return nCr(n + r - 1, r - 1);
+}
