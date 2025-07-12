@@ -43,7 +43,7 @@ class CalDepth {
         return dep;
     }
     void eulertour(int s) {
-        l = vi(n, n);
+        l = vi(n, 2 * n);
         r = vi(n);
         tour.clear();
 
